@@ -177,3 +177,21 @@ l_ExitLoop:
   }
   return result;
 }
+
+signed __int64 __fastcall GetTcpRowFromTable(__int64 TableBase, unsigned int EntryNbr, int TableNbr)
+{
+  int v3; // er8
+  int v4; // er8
+                                                // also look at "int TcpRowSize[4]"
+  if ( !TableNbr )                              // TableNbr=0  => MIB_TCPROW
+    return TableBase + 0x14i64 * EntryNbr + 4;    // "+ 4" =>add padding for the table size entry at 0x00
+  v3 = TableNbr - 1;
+  if ( !v3 )                                    // TableNbr=1  => MIB_TCPTABLE2
+    return 0x1Ci64 * EntryNbr + TableBase + 4;
+  v4 = v3 - 1;
+  if ( !v4 )                                    // TableNbr=2  => MIB_TCPTABLE_OWNER_MODULE
+    return 0xA0i64 * EntryNbr + TableBase + 8;
+  if ( v4 == 1 )                                // TableNbr=3  => MIB_TCPTABLE_OWNER_PID
+    return TableBase + 0x18i64 * EntryNbr + 4;
+  return 0i64;
+}
